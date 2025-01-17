@@ -405,6 +405,8 @@
 
 
     </style>
+    <!-- Include SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body>
@@ -420,6 +422,7 @@
     <table>
         <thead>
         <tr>
+
             <img src="https://api.badwords.milliytech.uz/static/images/animated.gif" alt="Description of the GIF"
                  style="max-width: 100%; height: auto;">
         </tr>
@@ -461,12 +464,25 @@
     <span class="material-symbols-outlined">clear_day</span>
 </button>
 
-<script>
-    const API_BASE_URL = 'https://api.badwords.milliytech.uz/api/v1/badword/';
 
+<script>
+    window.onload = function () {
+        if (!localStorage.getItem('alertShown')) {
+            Swal.fire({
+                title: 'Disclaimer⚠️',
+                text: '🔞Bu loyihada ko\'plab haqoratli so\'zlar mavjud bo\'lishi mumkin. Ushbu so\'zlar faqat o\'zbek tilidagi nojo\'ya so\'zlar ro\'yxatidan olingan. Ushbu so\'zlar faqat ma\'lumotlar olish maqsadida ishlatiladi va ularni ishlatishdan kelib chiqadigan huquqiy javobgarlik sizga tegishli bo\'lishi mumkin. 18 yoshdan kichiklar uchun bu loyiha tavsiya etilmaydi.🔞 OK tugmasini bossangiz, ushbu shartlarga rozilik bildirgan hisoblanasiz.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                footer: '<a href="https://jahongirhakimjonov.github.io/uzbek-badwords/">To\'liq malumot</a>',
+            }).then(() => {
+                localStorage.setItem('alertShown', 'true');
+            });
+        }
+    };
+
+    const API_BASE_URL = 'https://api.badwords.milliytech.uz/api/v1/badword/';
     const wordInput = document.getElementById('wordInput');
     const addButton = document.getElementById('addButton');
-    const wordList = document.getElementById('wordList');
     const wordCount = document.getElementById('wordCount');
 
     async function fetchWords() {
@@ -595,5 +611,6 @@
     updateWordList();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>
