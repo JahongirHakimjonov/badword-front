@@ -402,7 +402,10 @@
         body.dark-mode .social-icon {
             filter: invert(1);
         }
+
+
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body>
 <div class="container fade-in">
@@ -477,7 +480,9 @@
         }
     }
 
+
     async function addWord(word) {
+        const messageElement = document.getElementById('message');
         try {
             const response = await fetch(API_BASE_URL, {
                 method: 'POST',
@@ -486,22 +491,60 @@
                 },
                 body: JSON.stringify({word}),
             });
+            const data = await response.json();
             if (response.ok) {
-                updateWordList();
+                Toastify({
+                    text: data.message || "So'z qo'shildi!",
+                    duration: 3000, // Duration in ms
+                    close: true, // Show close button
+                    gravity: "top", // `top` or `bottom`
+                    position: "center", // `left`, `center` or `right`
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    stopOnFocus: true, // Stops timer when hovered
+                    style: {
+                        background: "rgb(0,255,78, 0.5)", // Transparent background
+                        backdropFilter: "blur(10px)", // Background blur
+                        color: "#ffffff", // Text color
+                        fontSize: "12px", // Font size
+                        fontFamily: "'Inter', sans-serif", // Custom font
+                        borderRadius: "12px", // More rounded corners
+                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)", // Enhanced box shadow
+                        padding: "16px 24px", // Padding for better spacing
+                        textAlign: "center" // Centered text
+                    }
+                }).showToast();
             } else {
-                console.error('Failed to add word');
+                Toastify({
+                    text: data.data.word || data.message || "Xatolik!",
+                    duration: 3000, // Duration in ms
+                    close: true, // Show close button
+                    gravity: "top", // `top` or `bottom`
+                    position: "center", // `left`, `center` or `right`
+                    stopOnFocus: true, // Stops timer when hovered
+                    style: {
+                        background: "rgba(245,0,0,0.5)", // Transparent background
+                        backdropFilter: "blur(10px)", // Background blur
+                        color: "#ffffff", // Text color
+                        fontSize: "12px", // Font size
+                        fontFamily: "'Inter', sans-serif", // Custom font
+                        borderRadius: "12px", // More rounded corners
+                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)", // Enhanced box shadow
+                        padding: "16px 24px", // Padding for better spacing
+                        textAlign: "center" // Centered text
+                    }
+                }).showToast();
             }
         } catch (error) {
             console.error('Error adding word:', error);
+            messageElement.style.display = 'block'; // Show message if error
         }
     }
 
-    function updateWordList() {
-        fetchWords().then(data => {
-            if (data) {
-                wordCount.textContent = `Jami so'zlar: ${data.total_items}`;
-            }
-        });
+    async function updateWordList() {
+        const data = await fetchWords();
+        if (data) {
+            wordCount.textContent = `Jami so'zlar: ${data.total_items}`;
+        }
     }
 
     addButton.addEventListener('click', () => {
@@ -551,5 +594,6 @@
     initializeTheme();
     updateWordList();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </body>
 </html>
